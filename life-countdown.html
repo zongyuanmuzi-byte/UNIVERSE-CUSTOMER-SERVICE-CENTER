@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>宇宙客服中心 - 人生倒计时</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-1: #030816;
+      --bg-2: #08142f;
+      --panel: rgba(12, 18, 38, 0.72);
+      --panel-border: rgba(255, 255, 255, 0.08);
+      --text: #f8fbff;
+      --muted: #aeb8d8;
+      --soft: #cfd7f4;
+      --accent: #fff1a8;
+      --accent-2: #9dd7ff;
+      --input-bg: rgba(20, 28, 56, 0.75);
+      --input-border: rgba(255, 255, 255, 0.08);
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+      --bar-bg: rgba(255, 255, 255, 0.08);
+      --bar-fill: linear-gradient(90deg, #b8d5ff, #fff1a8);
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 20%, rgba(68, 106, 255, 0.18), transparent 28%),
+        radial-gradient(circle at 80% 15%, rgba(130, 80, 255, 0.16), transparent 24%),
+        radial-gradient(circle at 70% 75%, rgba(0, 180, 255, 0.12), transparent 30%),
+        linear-gradient(180deg, var(--bg-1), var(--bg-2) 55%, #020611);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::before {
+      background-image:
+        radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.8), transparent),
+        radial-gradient(1.5px 1.5px at 120px 80px, rgba(255,255,255,0.55), transparent),
+        radial-gradient(1.5px 1.5px at 300px 160px, rgba(255,255,255,0.5), transparent),
+        radial-gradient(2px 2px at 500px 100px, rgba(255,255,255,0.7), transparent),
+        radial-gradient(1.5px 1.5px at 700px 220px, rgba(255,255,255,0.45), transparent),
+        radial-gradient(2px 2px at 900px 130px, rgba(255,255,255,0.7), transparent),
+        radial-gradient(1.5px 1.5px at 1100px 280px, rgba(255,255,255,0.55), transparent),
+        radial-gradient(2px 2px at 150px 320px, rgba(255,255,255,0.55), transparent),
+        radial-gradient(1.5px 1.5px at 420px 380px, rgba(255,255,255,0.45), transparent),
+        radial-gradient(2px 2px at 980px 420px, rgba(255,255,255,0.6), transparent),
+        radial-gradient(1.5px 1.5px at 1180px 520px, rgba(255,255,255,0.4), transparent),
+        radial-gradient(2px 2px at 1360px 200px, rgba(255,255,255,0.65), transparent);
+      background-repeat: repeat;
+      background-size: 1400px 800px;
+      opacity: 0.8;
+      animation: twinkle 10s linear infinite;
+    }
+
+    body::after {
+      background:
+        radial-gradient(circle at 50% 20%, rgba(255,255,255,0.05), transparent 28%),
+        radial-gradient(circle at 15% 80%, rgba(255,255,255,0.04), transparent 24%);
+      mix-blend-mode: screen;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.72; transform: translateY(0px); }
+      50% { opacity: 0.92; transform: translateY(4px); }
+    }
+
+    .planet,
+    .planet-2,
+    .nebula {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(0.2px);
+    }
+
+    .planet {
+      width: 260px;
+      height: 260px;
+      top: 80px;
+      right: -60px;
+      background:
+        radial-gradient(circle at 35% 35%, rgba(255,255,255,0.35), transparent 18%),
+        radial-gradient(circle at 30% 30%, #4e67ff, #1a255d 62%, #0c1230 100%);
+      box-shadow:
+        0 0 80px rgba(88, 123, 255, 0.22),
+        inset -30px -20px 50px rgba(0,0,0,0.38);
+      opacity: 0.9;
+      animation: floatPlanet 14s ease-in-out infinite;
+    }
+
+    .planet::after {
+      content: "";
+      position: absolute;
+      width: 360px;
+      height: 70px;
+      left: -50px;
+      top: 105px;
+      border: 1px solid rgba(180, 210, 255, 0.16);
+      border-radius: 50%;
+      transform: rotate(-12deg);
+      box-shadow: 0 0 30px rgba(100, 180, 255, 0.08);
+    }
+
+    .planet-2 {
+      width: 170px;
+      height: 170px;
+      bottom: 120px;
+      left: -40px;
+      background:
+        radial-gradient(circle at 35% 35%, rgba(255,255,255,0.28), transparent 18%),
+        radial-gradient(circle at 30% 30%, #ffb36b, #7b4b1b 60%, #2d1a0d 100%);
+      box-shadow:
+        0 0 60px rgba(255, 172, 90, 0.18),
+        inset -20px -15px 35px rgba(0,0,0,0.35);
+      opacity: 0.85;
+      animation: floatPlanet 18s ease-in-out infinite reverse;
+    }
+
+    .nebula {
+      width: 420px;
+      height: 420px;
+      top: 45%;
+      right: 18%;
+      background: radial-gradient(circle, rgba(126, 167, 255, 0.14), transparent 65%);
+      filter: blur(18px);
+      animation: pulseNebula 9s ease-in-out infinite;
+    }
+
+    @keyframes floatPlanet {
+      0%, 100% { transform: translateY(0px) translateX(0px); }
+      50% { transform: translateY(12px) translateX(-8px); }
+    }
+
+    @keyframes pulseNebula {
+      0%, 100% { opacity: 0.45; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(1.07); }
+    }
+
+    .top-back {
+      width: min(980px, calc(100% - 40px));
+      margin: 24px auto 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .top-back a {
+      color: rgba(230,240,255,0.82);
+      text-decoration: none;
+      font-size: 14px;
+      letter-spacing: 1px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+      padding: 10px 16px;
+      border-radius: 999px;
+      display: inline-block;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: all 0.25s ease;
+    }
+
+    .top-back a:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.2);
+      transform: translateY(-1px);
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 24px 20px 80px;
+    }
+
+    .header {
+      margin-bottom: 28px;
+    }
+
+    .title {
+      margin: 0 0 10px;
+      font-size: 52px;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      font-weight: 800;
+      text-shadow: 0 6px 18px rgba(0,0,0,0.32);
+    }
+
+    .subtitle {
+      color: var(--soft);
+      font-size: 18px;
+      line-height: 1.7;
+      max-width: 760px;
+    }
+
+    .motto {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 14px;
+      letter-spacing: 0.04em;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+    }
+
+    .card-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 15px;
+      color: #d9e4ff;
+      margin: 18px 0 14px;
+      padding-left: 10px;
+      border-left: 2px solid rgba(255,255,255,0.18);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    .field label {
+      font-size: 14px;
+      color: #dbe4ff;
+    }
+
+    .hint {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-top: -2px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 14px;
+      padding: 14px 14px;
+      color: white;
+      font-size: 15px;
+      outline: none;
+      transition: 0.22s ease;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: rgba(153, 206, 255, 0.65);
+      box-shadow: 0 0 0 4px rgba(109, 177, 255, 0.12);
+      transform: translateY(-1px);
+    }
+
+    .button-wrap {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    button {
+      min-width: 280px;
+      border: none;
+      border-radius: 18px;
+      padding: 16px 26px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      color: #0a1026;
+      background: linear-gradient(135deg, #f3f7ff, #cbd8ff);
+      box-shadow: 0 12px 30px rgba(183, 202, 255, 0.18);
+      transition: 0.22s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 36px rgba(183, 202, 255, 0.24);
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.72;
+      transform: none;
+    }
+
+    .progress-wrap {
+      margin-top: 8px;
+    }
+
+    .progress-label {
+      font-size: 14px;
+      color: #dbe5ff;
+      margin-bottom: 10px;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 14px;
+      background: var(--bar-bg);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--bar-fill);
+      border-radius: 999px;
+      box-shadow: 0 0 22px rgba(255, 241, 168, 0.24);
+      transition: width 0.18s linear;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .result-main {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+
+    .status {
+      font-size: 16px;
+      color: #dde7ff;
+    }
+
+    .big-number {
+      font-size: 72px;
+      line-height: 1;
+      font-weight: 800;
+      color: var(--accent);
+      text-shadow: 0 8px 22px rgba(255, 236, 166, 0.08);
+      letter-spacing: -0.04em;
+    }
+
+    .sub-big {
+      font-size: 16px;
+      color: var(--soft);
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .result-item {
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .result-item .label {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-item .value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.35;
+      word-break: break-word;
+    }
+
+    .message {
+      margin-top: 20px;
+      font-size: 15px;
+      color: #dbe5ff;
+      line-height: 1.8;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.03);
+    }
+
+    .footnote {
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 900px) {
+      .title {
+        font-size: 42px;
+      }
+
+      .result-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .top-back {
+        width: calc(100% - 32px);
+        margin-top: 18px;
+      }
+
+      .page {
+        padding-top: 20px;
+      }
+
+      .title {
+        font-size: 34px;
+      }
+
+      .subtitle {
+        font-size: 15px;
+      }
+
+      .grid,
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .big-number {
+        font-size: 50px;
+      }
+
+      button {
+        width: 100%;
+        min-width: 0;
+      }
+
+      .card {
+        padding: 20px;
+        border-radius: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="planet"></div>
+  <div class="planet-2"></div>
+  <div class="nebula"></div>
+
+  <div class="top-back">
+    <a href="index.html">← 返回宇宙客服中心</a>
+  </div>
+
+  <div class="page">
+    <div class="header">
+      <h1 class="title">宇宙客服中心</h1>
+      <div class="subtitle">
+        人生倒计时 · China Baseline v2.1<br>
+        在广阔宇宙里，我们尝试用一种更温和的方式，估计时间、理解风险、提醒珍惜。
+      </div>
+      <div class="motto">宇宙不会回答所有问题，但系统仍在运行。</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">人生倒计时输入面板</div>
+
+      <div class="section-title">基础信息</div>
+      <div class="grid">
+        <div class="field">
+          <label for="birthDate">出生日期</label>
+          <input id="birthDate" type="date" value="1998-08-14" />
+        </div>
+
+        <div class="field">
+          <label for="sex">性别</label>
+          <select id="sex">
+            <option value="male" selected>男</option>
+            <option value="female">女</option>
+            <option value="unknown">不告诉宇宙</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="heightCm">身高（cm）</label>
+          <input id="heightCm" type="number" value="175" />
+        </div>
+
+        <div class="field">
+          <label for="weightKg">体重（kg）</label>
+          <input id="weightKg" type="number" value="62" />
+        </div>
+      </div>
+
+      <div class="section-title">生活方式</div>
+      <div class="grid">
+        <div class="field">
+          <label for="smokingStatus">吸烟状态</label>
+          <select id="smokingStatus">
+            <option value="never">从不吸烟</option>
+            <option value="former">曾吸烟，现已停止</option>
+            <option value="current" selected>当前吸烟</option>
+          </select>
+        </div>
+
+        <div class="field" id="cigarettesPerDayField">
+          <label for="cigarettesPerDay">平均每天支数</label>
+          <input id="cigarettesPerDay" type="number" value="3" />
+        </div>
+
+        <div class="field" id="smokingYearsField">
+          <label for="smokingYears">累计吸烟年数</label>
+          <input id="smokingYears" type="number" value="5" />
+        </div>
+
+        <div class="field" id="quitYearsField">
+          <label for="quitYears">停止吸烟后已过年数</label>
+          <input id="quitYears" type="number" value="0" />
+          <div class="hint">仅在“曾吸烟，现已停止”时需要填写。</div>
+        </div>
+
+        <div class="field">
+          <label for="drinkingDaysPerWeek">每周饮酒天数</label>
+          <input id="drinkingDaysPerWeek" type="number" value="1" />
+        </div>
+
+        <div class="field">
+          <label for="drinksPerDrinkingDay">饮酒日平均杯数</label>
+          <input id="drinksPerDrinkingDay" type="number" value="1" />
+        </div>
+
+        <div class="field">
+          <label for="binge">是否存在明显集中饮酒</label>
+          <select id="binge">
+            <option value="false" selected>否</option>
+            <option value="true">是</option>
+          </select>
+          <div class="hint">例如短时间内饮用较多酒精饮品。</div>
+        </div>
+      </div>
+
+      <div class="section-title">家庭长寿参考</div>
+      <div class="grid">
+        <div class="field">
+          <label for="motherStatus">母亲当前情况</label>
+          <select id="motherStatus">
+            <option value="alive" selected>健在</option>
+            <option value="deceased">已离世</option>
+          </select>
+        </div>
+
+        <div class="field hidden" id="motherAgeField">
+          <label for="motherAgeAttained" id="motherAgeLabel">母亲享年</label>
+          <input id="motherAgeAttained" type="number" value="80" />
+          <div class="hint" id="motherHint">若母亲已离世，请填写其生前达到的年龄。</div>
+        </div>
+
+        <div class="field">
+          <label for="fatherStatus">父亲当前情况</label>
+          <select id="fatherStatus">
+            <option value="alive" selected>健在</option>
+            <option value="deceased">已离世</option>
+          </select>
+        </div>
+
+        <div class="field hidden" id="fatherAgeField">
+          <label for="fatherAgeAttained" id="fatherAgeLabel">父亲享年</label>
+          <input id="fatherAgeAttained" type="number" value="82" />
+          <div class="hint" id="fatherHint">若父亲已离世，请填写其生前达到的年龄。</div>
+        </div>
+
+        <div class="field full">
+          <label for="grandparentAvgAge">祖辈平均达到年龄（可选）</label>
+          <input id="grandparentAvgAge" type="number" value="80" />
+          <div class="hint">可作为家庭长寿参考的补充信息，不填也可以。</div>
+        </div>
+      </div>
+
+      <div class="button-wrap">
+        <button id="calculateBtn">开始宇宙检测</button>
+      </div>
+    </div>
+
+    <div class="card hidden" id="progressCard">
+      <div class="card-title">系统扫描中</div>
+      <div class="progress-wrap">
+        <div class="progress-label" id="progressLabel">正在连接宇宙主机…</div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-meta">
+          <span id="progressPercent">0%</span>
+          <span id="progressStage">准备中</span>
+        </div>
+      </div>
+      <div class="footnote">
+        系统正在读取生命表、分析生活方式并计算时间中位点，请稍候。
+      </div>
+    </div>
+
+    <div class="card hidden" id="resultCard">
+      <div class="result-main">
+        <div class="status">系统检测完成</div>
+        <div class="big-number" id="remainingDaysText">-- 天</div>
+        <div class="sub-big" id="subBigText">时间只是估计，请把它当作提醒，而不是宣判。</div>
+      </div>
+
+      <div class="result-grid">
+        <div class="result-item">
+          <div class="label">预计时间中位点</div>
+          <div class="value" id="offlineDateText">--</div>
+        </div>
+
+        <div class="result-item">
+          <div class="label">中位剩余寿命</div>
+          <div class="value" id="medianYearsText">--</div>
+        </div>
+
+        <div class="result-item">
+          <div class="label">综合风险乘子</div>
+          <div class="value" id="riskMultiplierText">--</div>
+        </div>
+
+        <div class="result-item">
+          <div class="label">活到 80 岁概率</div>
+          <div class="value" id="prob80Text">--</div>
+        </div>
+
+        <div class="result-item">
+          <div class="label">活到 90 岁概率</div>
+          <div class="value" id="prob90Text">--</div>
+        </div>
+
+        <div class="result-item">
+          <div class="label">80% 估计区间</div>
+          <div class="value" id="intervalText">--</div>
+        </div>
+      </div>
+
+      <div class="message" id="messageText">
+        数据仅供参考，宇宙不提供退款。
+      </div>
+      <div class="footnote">
+        本结果用于科普与自我提醒，不构成医学建议。请把它当作一次对生活方式与珍惜当下的温柔提醒。
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">系统估计逻辑</div>
+      <div class="message" style="margin-top:0;">
+        本系统采用“基线寿命 + 风险修正”的估计方式。<br><br>
+        先以中国人口平均预期寿命作为基线，再结合体重指数（BMI）、吸烟情况、饮酒模式以及家庭长寿信息，对风险进行温和修正，最终输出一个中位估计时间、概率区间与阶段性存活概率。<br><br>
+        它更接近一个科普型、生存分析风格的估计模型，而不是医学诊断。结果不代表个体命运，只是一种关于生活方式的提醒。
+      </div>
+
+      <div class="footnote">
+        研究参考方向：<br>
+        1. 中国平均预期寿命统计口径<br>
+        2. BMI 与全因死亡风险的大型 Meta 分析<br>
+        3. 低强度吸烟与全因死亡风险研究<br>
+        4. 酒精摄入与健康风险共识<br><br>
+        说明：本页面为产品演示版，参数经过工程化处理与温和裁剪，用于增强可解释性与交互体验。
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
