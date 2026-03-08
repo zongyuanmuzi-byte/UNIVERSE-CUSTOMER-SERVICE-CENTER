@@ -291,6 +291,10 @@
       transform: translateY(-1px);
     }
 
+    input::placeholder {
+      color: rgba(210, 220, 245, 0.42);
+    }
+
     .button-wrap {
       display: flex;
       justify-content: center;
@@ -508,26 +512,26 @@
       <div class="grid">
         <div class="field">
           <label for="birthDate">出生日期</label>
-          <input id="birthDate" type="date" value="1998-08-14" />
+          <input id="birthDate" type="date" autocomplete="off" />
         </div>
 
         <div class="field">
           <label for="sex">性别</label>
-          <select id="sex">
-            <option value="male" selected>男</option>
+          <select id="sex" autocomplete="off">
+            <option value="unknown" selected>不告诉宇宙</option>
+            <option value="male">男</option>
             <option value="female">女</option>
-            <option value="unknown">不告诉宇宙</option>
           </select>
         </div>
 
         <div class="field">
           <label for="heightCm">身高（cm）</label>
-          <input id="heightCm" type="number" value="175" />
+          <input id="heightCm" type="number" placeholder="例如 175" autocomplete="off" />
         </div>
 
         <div class="field">
           <label for="weightKg">体重（kg）</label>
-          <input id="weightKg" type="number" value="62" />
+          <input id="weightKg" type="number" placeholder="例如 62" autocomplete="off" />
         </div>
       </div>
 
@@ -535,42 +539,42 @@
       <div class="grid">
         <div class="field">
           <label for="smokingStatus">吸烟状态</label>
-          <select id="smokingStatus">
-            <option value="never">从不吸烟</option>
+          <select id="smokingStatus" autocomplete="off">
+            <option value="never" selected>从不吸烟</option>
             <option value="former">曾吸烟，现已停止</option>
-            <option value="current" selected>当前吸烟</option>
+            <option value="current">当前吸烟</option>
           </select>
         </div>
 
-        <div class="field" id="cigarettesPerDayField">
+        <div class="field hidden" id="cigarettesPerDayField">
           <label for="cigarettesPerDay">平均每天支数</label>
-          <input id="cigarettesPerDay" type="number" value="3" />
+          <input id="cigarettesPerDay" type="number" placeholder="例如 3" autocomplete="off" />
         </div>
 
-        <div class="field" id="smokingYearsField">
+        <div class="field hidden" id="smokingYearsField">
           <label for="smokingYears">累计吸烟年数</label>
-          <input id="smokingYears" type="number" value="5" />
+          <input id="smokingYears" type="number" placeholder="例如 5" autocomplete="off" />
         </div>
 
-        <div class="field" id="quitYearsField">
+        <div class="field hidden" id="quitYearsField">
           <label for="quitYears">停止吸烟后已过年数</label>
-          <input id="quitYears" type="number" value="0" />
+          <input id="quitYears" type="number" placeholder="例如 2" autocomplete="off" />
           <div class="hint">仅在“曾吸烟，现已停止”时需要填写。</div>
         </div>
 
         <div class="field">
           <label for="drinkingDaysPerWeek">每周饮酒天数</label>
-          <input id="drinkingDaysPerWeek" type="number" value="1" />
+          <input id="drinkingDaysPerWeek" type="number" placeholder="例如 1" autocomplete="off" />
         </div>
 
         <div class="field">
           <label for="drinksPerDrinkingDay">饮酒日平均杯数</label>
-          <input id="drinksPerDrinkingDay" type="number" value="1" />
+          <input id="drinksPerDrinkingDay" type="number" placeholder="例如 1" autocomplete="off" />
         </div>
 
         <div class="field">
           <label for="binge">是否存在明显集中饮酒</label>
-          <select id="binge">
+          <select id="binge" autocomplete="off">
             <option value="false" selected>否</option>
             <option value="true">是</option>
           </select>
@@ -582,7 +586,7 @@
       <div class="grid">
         <div class="field">
           <label for="motherStatus">母亲当前情况</label>
-          <select id="motherStatus">
+          <select id="motherStatus" autocomplete="off">
             <option value="alive" selected>健在</option>
             <option value="deceased">已离世</option>
           </select>
@@ -590,13 +594,13 @@
 
         <div class="field hidden" id="motherAgeField">
           <label for="motherAgeAttained" id="motherAgeLabel">母亲享年</label>
-          <input id="motherAgeAttained" type="number" value="80" />
+          <input id="motherAgeAttained" type="number" placeholder="例如 80" autocomplete="off" />
           <div class="hint" id="motherHint">若母亲已离世，请填写其生前达到的年龄。</div>
         </div>
 
         <div class="field">
           <label for="fatherStatus">父亲当前情况</label>
-          <select id="fatherStatus">
+          <select id="fatherStatus" autocomplete="off">
             <option value="alive" selected>健在</option>
             <option value="deceased">已离世</option>
           </select>
@@ -604,13 +608,13 @@
 
         <div class="field hidden" id="fatherAgeField">
           <label for="fatherAgeAttained" id="fatherAgeLabel">父亲享年</label>
-          <input id="fatherAgeAttained" type="number" value="82" />
+          <input id="fatherAgeAttained" type="number" placeholder="例如 82" autocomplete="off" />
           <div class="hint" id="fatherHint">若父亲已离世，请填写其生前达到的年龄。</div>
         </div>
 
         <div class="field full">
           <label for="grandparentAvgAge">祖辈平均达到年龄（可选）</label>
-          <input id="grandparentAvgAge" type="number" value="80" />
+          <input id="grandparentAvgAge" type="number" placeholder="例如 80" autocomplete="off" />
           <div class="hint">可作为家庭长寿参考的补充信息，不填也可以。</div>
         </div>
       </div>
