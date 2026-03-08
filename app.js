@@ -5,9 +5,12 @@ let scanTimer = null;
 function getNumberValue(id) {
   const el = document.getElementById(id);
   if (!el) return null;
-  const value = el.value;
+
+  const value = el.value?.trim?.() ?? el.value;
   if (value === "" || value == null) return null;
-  return Number(value);
+
+  const num = Number(value);
+  return Number.isNaN(num) ? null : num;
 }
 
 function toPercent(value) {
@@ -41,19 +44,23 @@ function updateSmokingField() {
     smokingYearsField.classList.add("hidden");
     quitYearsField.classList.add("hidden");
 
-    if (cigarettesPerDayEl) cigarettesPerDayEl.value = 0;
-    if (smokingYearsEl) smokingYearsEl.value = 0;
-    if (quitYearsEl) quitYearsEl.value = 0;
+    if (cigarettesPerDayEl) cigarettesPerDayEl.value = "";
+    if (smokingYearsEl) smokingYearsEl.value = "";
+    if (quitYearsEl) quitYearsEl.value = "";
   } else if (smokingStatus === "former") {
     cigarettesPerDayField.classList.remove("hidden");
     smokingYearsField.classList.remove("hidden");
     quitYearsField.classList.remove("hidden");
+
+    if (quitYearsEl && quitYearsEl.value === "0") {
+      quitYearsEl.value = "";
+    }
   } else if (smokingStatus === "current") {
     cigarettesPerDayField.classList.remove("hidden");
     smokingYearsField.classList.remove("hidden");
     quitYearsField.classList.add("hidden");
 
-    if (quitYearsEl) quitYearsEl.value = 0;
+    if (quitYearsEl) quitYearsEl.value = "";
   }
 }
 
@@ -86,7 +93,7 @@ function getInputData() {
   const fatherStatus = document.getElementById("fatherStatus")?.value;
 
   return {
-    birthDate: document.getElementById("birthDate")?.value,
+    birthDate: document.getElementById("birthDate")?.value || "",
     sex: document.getElementById("sex")?.value || "unknown",
 
     heightCm: getNumberValue("heightCm"),
@@ -114,6 +121,7 @@ function getInputData() {
 function showProgressCard() {
   const progressCard = document.getElementById("progressCard");
   const resultCard = document.getElementById("resultCard");
+
   if (progressCard) progressCard.classList.remove("hidden");
   if (resultCard) resultCard.classList.add("hidden");
 
@@ -248,8 +256,7 @@ function renderResult(result) {
       result.interval80PctYears[0] != null &&
       result.interval80PctYears[1] != null
     ) {
-      intervalText.textContent =
-        `${result.interval80PctYears[0]} - ${result.interval80PctYears[1]} 年`;
+      intervalText.textContent = `${result.interval80PctYears[0]} - ${result.interval80PctYears[1]} 年`;
     } else {
       intervalText.textContent = "--";
     }
@@ -280,6 +287,78 @@ function setButtonLoading(isLoading) {
 
   btn.disabled = isLoading;
   btn.textContent = isLoading ? "宇宙检测中…" : "开始宇宙检测";
+}
+
+function resetVisualState() {
+  const resultCard = document.getElementById("resultCard");
+  const progressCard = document.getElementById("progressCard");
+
+  if (resultCard) resultCard.classList.add("hidden");
+  if (progressCard) progressCard.classList.add("hidden");
+
+  updateProgressUI(0, "准备中", "正在连接宇宙主机…");
+
+  const remainingDaysText = document.getElementById("remainingDaysText");
+  const offlineDateText = document.getElementById("offlineDateText");
+  const medianYearsText = document.getElementById("medianYearsText");
+  const prob80Text = document.getElementById("prob80Text");
+  const prob90Text = document.getElementById("prob90Text");
+  const riskMultiplierText = document.getElementById("riskMultiplierText");
+  const intervalText = document.getElementById("intervalText");
+  const messageText = document.getElementById("messageText");
+
+  if (remainingDaysText) remainingDaysText.textContent = "-- 天";
+  if (offlineDateText) offlineDateText.textContent = "--";
+  if (medianYearsText) medianYearsText.textContent = "--";
+  if (prob80Text) prob80Text.textContent = "--";
+  if (prob90Text) prob90Text.textContent = "--";
+  if (riskMultiplierText) riskMultiplierText.textContent = "--";
+  if (intervalText) intervalText.textContent = "--";
+  if (messageText) messageText.textContent = "数据仅供参考，宇宙不提供退款。";
+}
+
+function clearAllInputsForPrivacy() {
+  const textInputIds = [
+    "birthDate",
+    "heightCm",
+    "weightKg",
+    "cigarettesPerDay",
+    "smokingYears",
+    "quitYears",
+    "drinkingDaysPerWeek",
+    "drinksPerDrinkingDay",
+    "motherAgeAttained",
+    "fatherAgeAttained",
+    "grandparentAvgAge"
+  ];
+
+  textInputIds.forEach((id) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.value = "";
+    el.setAttribute("autocomplete", "off");
+  });
+
+  const defaultSelectValues = {
+    sex: "unknown",
+    smokingStatus: "never",
+    binge: "false",
+    motherStatus: "alive",
+    fatherStatus: "alive"
+  };
+
+  Object.entries(defaultSelectValues).forEach(([id, value]) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.value = value;
+    el.setAttribute("autocomplete", "off");
+  });
+
+  updateSmokingField();
+  updateParentField("mother");
+  updateParentField("father");
+  resetVisualState();
+  setButtonLoading(false);
 }
 
 function bindEvents() {
@@ -333,7 +412,14 @@ function bindEvents() {
   }
 }
 
-updateSmokingField();
-updateParentField("mother");
-updateParentField("father");
-bindEvents();
+function init() {
+  if (scanTimer) {
+    clearInterval(scanTimer);
+    scanTimer = null;
+  }
+
+  clearAllInputsForPrivacy();
+  bindEvents();
+}
+
+window.addEventListener("DOMContentLoaded", init);
